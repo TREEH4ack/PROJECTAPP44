@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Tugas Kelompok XI-3 | SMAN 44 Jakarta</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #cbd5e1; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen p-0 sm:p-4">
+
+    <!-- MODAL LOGIN AWAL -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[32px] max-w-sm w-full p-8 shadow-2xl border border-slate-100 transform transition-all">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl mb-6 mx-auto shadow-sm">
+                <i class="fa-solid fa-school"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 text-center mb-1">SMAN 44 Jakarta</h2>
+            <p class="text-xs text-slate-400 text-center mb-6">Portal Tugas Projek Kelompok Kelas XI-3</p>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap</label>
+                    <input type="text" id="login-nama" required value="Try Hadi Gunawan" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas</label>
+                    <input type="text" id="login-kelas" required value="XI-3" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Username</label>
+                    <input type="text" id="login-username" required value="SMAN44JKT" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+                    <input type="password" id="login-password" required value="SMAN44JKT" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition shadow-lg shadow-emerald-600/30 mt-2">
+                    Masuk ke Dashboard
+                </button>
+            </form>
+            <p class="text-[10px] text-slate-400 text-center mt-4">Kredensial: <span class="font-semibold text-slate-600">SMAN44JKT</span></p>
+        </div>
+    </div>
+
+    <!-- CONTAINER UTAMA GAYA MOBILE DASHBOARD -->
+    <div class="w-full sm:max-w-[440px] h-screen sm:h-[900px] bg-[#f8fafc] sm:rounded-[40px] shadow-2xl flex flex-col justify-between relative overflow-hidden border border-slate-300">
+        
+        <!-- HEADER / TOPBAR -->
+        <header class="px-6 pt-6 pb-4 bg-[#f8fafc] flex items-center justify-between z-10 sticky top-0 border-b border-slate-100">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-full bg-emerald-100 text-emerald-700 overflow-hidden border-2 border-white shadow-sm flex items-center justify-center font-bold text-sm">
+                    <span id="header-avatar">TH</span>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400 font-medium" id="header-greeting">Selamat Pagi,</p>
+                    <h1 class="text-sm font-bold text-slate-800 tracking-tight" id="header-title">Try Hadi Gunawan</h1>
+                    <p class="text-[10px] font-semibold text-emerald-600" id="header-sub">Kelas XI-3 (SMAN 44 Jakarta)</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="switchTab('dashboard')" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 shadow-sm hover:bg-slate-50 transition">
+                    <i class="fa-solid fa-house"></i>
+                </button>
+                <button onclick="logoutApp()" class="w-10 h-10 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shadow-sm hover:bg-rose-100 transition" title="Keluar">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- KONTEN UTAMA SCROLLABLE -->
+        <main id="main-content" class="flex-1 overflow-y-auto px-6 py-4 space-y-6 hide-scrollbar pb-28">
+            <!-- Konten dinamis dirender via JS -->
+        </main>
+
+        <!-- NAVIGASI BAWAH (BOTTOM BAR) -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 py-3 px-6 flex justify-between items-center z-20 shadow-lg">
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center text-emerald-600 font-bold transition group">
+                <div class="px-3 py-1 rounded-full group-hover:bg-emerald-50 transition flex items-center space-x-1">
+                    <i class="fa-solid fa-house text-lg"></i>
+                    <span class="text-xs font-semibold hidden sm:inline">Home</span>
+                </div>
+            </button>
+            <button onclick="switchTab('nilai')" id="nav-nilai" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 transition group">
+                <div class="px-3 py-1 rounded-full group-hover:bg-emerald-50 transition flex items-center space-x-1">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                    <span class="text-xs font-semibold">Nilai</span>
+                </div>
+            </button>
+            <button onclick="switchTab('keuangan')" id="nav-keuangan" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 transition group">
+                <div class="px-3 py-1 rounded-full group-hover:bg-emerald-50 transition flex items-center space-x-1">
+                    <i class="fa-solid fa-wallet text-lg"></i>
+                    <span class="text-xs font-semibold">Keuangan</span>
+                </div>
+            </button>
+            <button onclick="switchTab('perpus')" id="nav-perpus" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 transition group">
+                <div class="px-3 py-1 rounded-full group-hover:bg-emerald-50 transition flex items-center space-x-1">
+                    <i class="fa-solid fa-book text-lg"></i>
+                    <span class="text-xs font-semibold">Perpus</span>
+                </div>
+            </button>
+            <button onclick="switchTab('makanan')" id="nav-makanan" class="flex flex-col items-center text-slate-400 hover:text-emerald-600 transition group">
+                <div class="px-3 py-1 rounded-full group-hover:bg-emerald-50 transition flex items-center space-x-1">
+                    <i class="fa-solid fa-utensils text-lg"></i>
+                    <span class="text-xs font-semibold">Kantin</span>
+                </div>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- MODAL NOTIFIKASI CUSTOM (GANTI ALERT) -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl transform transition-all scale-95 opacity-0 duration-300" id="modal-box">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4 mx-auto" id="modal-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 text-center mb-2" id="modal-title">Berhasil</h3>
+            <p class="text-sm text-slate-600 text-center mb-6 whitespace-pre-line" id="modal-message">Pesan informasi sistem.</p>
+            <button onclick="closeModal()" class="w-full py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition shadow-md">Tutup</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT APLIKASI LENGKAP -->
+    <script>
+        let currentTab = 'dashboard';
+        let currentUser = { nama: "Try Hadi Gunawan", kelas: "XI-3" };
+        
+        let nilaiData = [];
+        let keuanganData = { saldo: 0, riwayat: [] };
+        let perpusData = {
+            buku: [
+                { id: 1, judul: "Pendidikan Agama Islam", penulis: "Kemendikbud", stok: 5 },
+                { id: 2, judul: "Pendidikan Pancasila & Kewarganegaraan", penulis: "Kemendikbud", stok: 4 },
+                { id: 3, judul: "Bahasa Indonesia", penulis: "Kemendikbud", stok: 6 },
+                { id: 4, judul: "Matematika Tingkat Lanjut", penulis: "BSE", stok: 5 },
+                { id: 5, judul: "Bahasa Inggris Tingkat Lanjut", penulis: "Kemendikbud", stok: 4 },
+                { id: 6, judul: "Sejarah Indonesia", penulis: "Kemendikbud", stok: 3 },
+                { id: 7, judul: "Fisika Kelas XI", penulis: "Tim Erlangga", stok: 4 },
+                { id: 8, judul: "Kimia Kelas XI", penulis: "Tim Erlangga", stok: 5 },
+                { id: 9, judul: "Biologi Kelas XI", penulis: "Tim Erlangga", stok: 4 },
+                { id: 10, judul: "Informatika Kelas XI", penulis: "Kemendikbud", stok: 6 },
+                { id: 11, judul: "Seni Budaya", penulis: "Kemendikbud", stok: 3 },
+                { id: 12, judul: "PJOK (Olahraga & Kesehatan)", penulis: "Kemendikbud", stok: 4 },
+                { id: 13, judul: "Prakarya dan Kewirausahaan", penulis: "Kemendikbud", stok: 5 }
+            ],
+            peminjaman: []
+        };
+        let makananData = {
+            menu: [
+                { id: 1, nama: "Nasi Ayam Geprek", harga: 15000, icon: "fa-bowl-food" },
+                { id: 2, nama: "Mie Goreng Spesial", harga: 12000, icon: "fa-plate-wheat" },
+                { id: 3, nama: "Es Teh Manis", harga: 5000, icon: "fa-glass-water" },
+                { id: 4, nama: "Jus Alpukat", harga: 10000, icon: "fa-cup-straw" }
+            ],
+            keranjang: []
+        };
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const namaInput = document.getElementById('login-nama').value.trim();
+            const kelasInput = document.getElementById('login-kelas').value.trim();
+            const usn = document.getElementById('login-username').value.trim();
+            const pwd = document.getElementById('login-password').value.trim();
+
+            if (usn === 'SMAN44JKT' && pwd === 'SMAN44JKT') {
+                currentUser.nama = namaInput;
+                currentUser.kelas = kelasInput;
+
+                document.getElementById('header-title').innerText = currentUser.nama;
+                document.getElementById('header-sub').innerText = `Kelas ${currentUser.kelas} (SMAN 44 Jakarta)`;
+                
+                const initials = currentUser.nama.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase();
+                document.getElementById('header-avatar').innerText = initials;
+
+                const loginModal = document.getElementById('login-modal');
+                loginModal.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => { loginModal.style.display = 'none'; }, 300);
+
+                showModal("Login Berhasil", `Selamat datang kembali, ${currentUser.nama} (${currentUser.kelas}).`);
+                renderContent();
+            } else {
+                showModal("Login Gagal", "Username atau Password salah! Gunakan SMAN44JKT.", "fa-solid fa-triangle-exclamation", "bg-rose-100 text-rose-600");
+            }
+        }
+
+        function logoutApp() {
+            document.getElementById('login-modal').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('login-modal').classList.remove('opacity-0', 'pointer-events-none');
+            }, 10);
+        }
+
+        function showModal(title, message, iconClass = "fa-solid fa-check", iconBg = "bg-emerald-100 text-emerald-600") {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            const iconEl = document.getElementById('modal-icon');
+            iconEl.className = `w-12 h-12 rounded-full flex items-center justify-center text-xl mb-4 mx-auto ${iconBg}`;
+            iconEl.innerHTML = `<i class="${iconClass}"></i>`;
+            
+            const modal = document.getElementById('custom-modal');
+            const box = document.getElementById('modal-box');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            const box = document.getElementById('modal-box');
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            ['dashboard', 'nilai', 'keuangan', 'perpus', 'makanan'].forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if(btn) {
+                    if(t === tab) {
+                        btn.classList.add('text-emerald-600', 'font-bold');
+                        btn.classList.remove('text-slate-400');
+                    } else {
+                        btn.classList.remove('text-emerald-600', 'font-bold');
+                        btn.classList.add('text-slate-400');
+                    }
+                }
+            });
+            renderContent();
+        }
+
+        function renderContent() {
+            const main = document.getElementById('main-content');
+            main.innerHTML = '';
+
+            if (currentTab === 'dashboard') {
+                main.innerHTML = `
+                    <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Akun Keuangan & Tabungan</span>
+                                <h2 class="text-2xl font-bold mt-1">Rp ${keuanganData.saldo.toLocaleString('id-ID')}</h2>
+                            </div>
+                            <button onclick="switchTab('keuangan')" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition">
+                                <i class="fa-solid fa-arrow-right text-sm"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-700/60 text-xs text-slate-300">
+                            <span><i class="fa-solid fa-user-shield mr-1"></i> ${currentUser.nama} - ${currentUser.kelas}</span>
+                            <span class="text-emerald-400 font-semibold flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5 animate-ping"></span> Aktif</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-slate-800 text-sm">Aplikasi Tugas Kelompok</h3>
+                            <span class="text-xs text-emerald-600 font-semibold">4 Fitur Utama</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div onclick="switchTab('nilai')" class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Penghitung Nilai</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Tugas, UTS, UAS & Predikat</p>
+                                </div>
+                            </div>
+                            <div onclick="switchTab('keuangan')" class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Pengelola Keuangan</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Catat masuk & keluar</p>
+                                </div>
+                            </div>
+                            <div onclick="switchTab('perpus')" class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
+                                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-book-bookmark"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Perpustakaan</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">13 Mapel & peminjaman</p>
+                                </div>
+                            </div>
+                            <div onclick="switchTab('makanan')" class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
+                                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-burger"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Pemesanan Makanan</h4>
+                                    <p class="text-xs text-slate-400 mt-0.5">Kantin & cetak struk</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-slate-800 text-sm">Aktivitas Terkini</h3>
+                            <button onclick="switchTab('keuangan')" class="text-xs font-semibold text-emerald-600 hover:underline">Lihat Semua</button>
+                        </div>
+                        <div class="space-y-2.5">
+                            ${keuanganData.riwayat.length === 0 ? `
+                                <div class="bg-white p-5 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs">
+                                    Belum ada aktivitas transaksi keuangan.
+                                </div>
+                            ` : keuanganData.riwayat.slice(0, 3).map(item => `
+                                <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center justify-between shadow-sm">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-9 h-9 rounded-full ${item.jenis === 'masuk' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} flex items-center justify-center text-sm">
+                                            <i class="fa-solid ${item.jenis === 'masuk' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-xs">${item.ket}</p>
+                                            <p class="text-[10px] text-slate-400">${item.tanggal}</p>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-xs ${item.jenis === 'masuk' ? 'text-emerald-600' : 'text-rose-600'}">
+                                        ${item.jenis === 'masuk' ? '+' : '-'}Rp ${item.jumlah.toLocaleString('id-ID')}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } 
+            else if (currentTab === 'nilai') {
+                main.innerHTML = `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                            <i class="fa-solid fa-calculator text-emerald-600 mr-2"></i> Penghitung Nilai Siswa
+                        </h3>
+                        <form onsubmit="tambahNilai(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Siswa</label>
+                                <input type="text" id="input-nama" required value="${currentUser.nama}" placeholder="Contoh: Rina Melati" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Mata Pelajaran</label>
+                                <input type="text" id="input-mapel" required placeholder="Contoh: Informatika" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Tugas (30%)</label>
+                                    <input type="number" id="input-tugas" min="0" max="100" required placeholder="0-100" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">UTS (30%)</label>
+                                    <input type="number" id="input-uts" min="0" max="100" required placeholder="0-100" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">UAS (40%)</label>
+                                    <input type="number" id="input-uas" min="0" max="100" required placeholder="0-100" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition shadow-md shadow-emerald-600/20">
+                                Hitung & Simpan Nilai
+                            </button>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3">Daftar Nilai Siswa</h3>
+                        <div class="space-y-3">
+                            ${nilaiData.length === 0 ? `
+                                <div class="bg-white p-5 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs">
+                                    Belum ada data nilai yang dimasukkan.
+                                </div>
+                            ` : nilaiData.map(n => `
+                                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                                    <div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-bold text-slate-800 text-sm">${n.nama}</span>
+                                            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] rounded-md font-medium">${n.mapel}</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-1">T: ${n.tugas} | UTS: ${n.uts} | UAS: ${n.uas}</p>
+                                    </div>
+                                    <div class="text-right flex items-center space-x-2">
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-800">${n.akhir.toFixed(1)}</p>
+                                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-lg">Predikat ${n.predikat}</span>
+                                        </div>
+                                        <button onclick="hapusNilai(${n.id})" class="text-slate-300 hover:text-rose-500 transition p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            else if (currentTab === 'keuangan') {
+                main.innerHTML = `
+                    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+                        <p class="text-xs text-emerald-100 font-medium">Total Saldo Kas Siswa</p>
+                        <h2 class="text-3xl font-extrabold mt-1">Rp ${keuanganData.saldo.toLocaleString('id-ID')}</h2>
+                        <div class="mt-4 pt-4 border-t border-emerald-500/50 flex justify-between text-xs">
+                            <span>Status: Aman & Terverifikasi</span>
+                            <span>${currentUser.kelas}</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                            <i class="fa-solid fa-plus-minus text-emerald-600 mr-2"></i> Catat Transaksi Keuangan
+                        </h3>
+                        <form onsubmit="tambahTransaksi(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan Transaksi</label>
+                                <input type="text" id="trx-ket" required placeholder="Contoh: Iuran Kas / Beli Spidol" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis</label>
+                                    <select id="trx-jenis" class="w-full px-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                                        <option value="masuk">Uang Masuk (+)</option>
+                                        <option value="keluar">Pengeluaran (-)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah (Rp)</label>
+                                    <input type="number" id="trx-jumlah" min="100" required placeholder="10000" class="w-full px-3 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition shadow-md">
+                                Simpan Transaksi
+                            </button>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3">Riwayat Transaksi</h3>
+                        <div class="space-y-2.5">
+                            ${keuanganData.riwayat.length === 0 ? `
+                                <div class="bg-white p-6 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs">
+                                    Belum ada catatan riwayat transaksi keuangan.
+                                </div>
+                            ` : keuanganData.riwayat.map(item => `
+                                <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex items-center justify-between shadow-sm">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-9 h-9 rounded-full ${item.jenis === 'masuk' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'} flex items-center justify-center text-sm">
+                                            <i class="fa-solid ${item.jenis === 'masuk' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-xs">${item.ket}</p>
+                                            <p class="text-[10px] text-slate-400">${item.tanggal}</p>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-xs ${item.jenis === 'masuk' ? 'text-emerald-600' : 'text-rose-600'}">
+                                        ${item.jenis === 'masuk' ? '+' : '-'}Rp ${item.jumlah.toLocaleString('id-ID')}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            else if (currentTab === 'perpus') {
+                main.innerHTML = `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                            <i class="fa-solid fa-book-medical text-purple-600 mr-2"></i> Peminjaman Buku (13 Mapel)
+                        </h3>
+                        <form onsubmit="pinjamBuku(event)" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Peminjam</label>
+                                <input type="text" id="perpus-nama" value="${currentUser.nama}" required class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Buku Mata Pelajaran</label>
+                                <select id="perpus-buku" class="w-full px-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                                    ${perpusData.buku.map(b => `<option value="${b.judul}">${b.judul} (Stok: ${b.stok})</option>`).join('')}
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-purple-600 text-white rounded-xl text-xs font-bold hover:bg-purple-700 transition shadow-md shadow-purple-600/20">
+                                Proses Peminjaman Buku
+                            </button>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3">Daftar Lengkap 13 Buku Mapel</h3>
+                        <div class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                            ${perpusData.buku.map(b => `
+                                <div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm text-xs">
+                                    <div>
+                                        <h4 class="font-bold text-slate-800">${b.judul}</h4>
+                                        <p class="text-[10px] text-slate-400">Penerbit: ${b.penulis}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="px-2 py-0.5 text-[10px] font-bold rounded-lg ${b.stok > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}">
+                                            ${b.stok > 0 ? `Stok: ${b.stok}` : 'Habis'}
+                                        </span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3">Peminjaman Aktif</h3>
+                        <div class="space-y-2.5">
+                            ${perpusData.peminjaman.length === 0 ? `
+                                <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs">
+                                    Belum ada peminjaman buku aktif saat ini.
+                                </div>
+                            ` : perpusData.peminjaman.map((p, idx) => `
+                                <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
+                                    <div>
+                                        <p class="font-bold text-slate-800 text-xs">${p.peminjam}</p>
+                                        <p class="text-[11px] text-slate-500">Meminjam: ${p.judul}</p>
+                                        <p class="text-[10px] text-slate-400">Tanggal: ${p.tanggal}</p>
+                                    </div>
+                                    <button onclick="kembalikanBuku(${idx})" class="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold rounded-xl hover:bg-slate-800 transition">
+                                        Kembalikan
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            else if (currentTab === 'makanan') {
+                const totalKeranjang = makananData.keranjang.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
+                main.innerHTML = `
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3">Menu Kantin SMAN 44</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            ${makananData.menu.map(m => `
+                                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                                    <div>
+                                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg mb-2.5">
+                                            <i class="fa-solid ${m.icon}"></i>
+                                        </div>
+                                        <h4 class="font-bold text-slate-800 text-xs">${m.nama}</h4>
+                                        <p class="text-xs font-semibold text-emerald-600 mt-1">Rp ${m.harga.toLocaleString('id-ID')}</p>
+                                    </div>
+                                    <button onclick="tambahKeKeranjang(${m.id})" class="mt-3 w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition shadow-sm">
+                                        + Pesan
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                            <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                                <i class="fa-solid fa-receipt text-amber-500 mr-2"></i> Keranjang Pesanan
+                            </h3>
+                            <span class="text-xs text-slate-400 font-semibold">${makananData.keranjang.length} Item</span>
+                        </div>
+
+                        ${makananData.keranjang.length === 0 ? `
+                            <p class="text-xs text-slate-400 text-center py-4">Keranjang masih kosong. Silakan pilih menu di atas.</p>
+                        ` : `
+                            <div class="space-y-2">
+                                ${makananData.keranjang.map((k, i) => `
+                                    <div class="flex justify-between items-center text-xs">
+                                        <div>
+                                            <p class="font-bold text-slate-800">${k.nama}</p>
+                                            <p class="text-[10px] text-slate-400">${k.jumlah}x @Rp ${k.harga.toLocaleString('id-ID')}</p>
+                                        </div>
+                                        <div class="flex items-center space-x-3">
+                                            <span class="font-semibold text-slate-700">Rp ${(k.harga * k.jumlah).toLocaleString('id-ID')}</span>
+                                            <button onclick="hapusKeranjang(${i})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 flex justify-between items-center">
+                                <span class="font-bold text-xs text-slate-600">Total Harga:</span>
+                                <span class="font-extrabold text-sm text-emerald-600">Rp ${totalKeranjang.toLocaleString('id-ID')}</span>
+                            </div>
+                            <button onclick="cetakStruk()" class="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition shadow-md">
+                                Cetak Struk Pembayaran
+                            </button>
+                        `}
+                    </div>
+                `;
+            }
+        }
+
+        function tambahNilai(e) {
+            e.preventDefault();
+            const nama = document.getElementById('input-nama').value;
+            const mapel = document.getElementById('input-mapel').value;
+            const tugas = parseFloat(document.getElementById('input-tugas').value);
+            const uts = parseFloat(document.getElementById('input-uts').value);
+            const uas = parseFloat(document.getElementById('input-uas').value);
+
+            const akhir = (tugas * 0.3) + (uts * 0.3) + (uas * 0.4);
+            let predikat = 'C';
+            if (akhir >= 85) predikat = 'A';
+            else if (akhir >= 75) predikat = 'B';
+            else if (akhir >= 65) predikat = 'C';
+            else predikat = 'D';
+
+            nilaiData.push({ id: Date.now(), nama, mapel, tugas, uts, uas, akhir, predikat });
+            showModal("Nilai Disimpan", `Nilai akhir ${nama} adalah ${akhir.toFixed(1)} dengan Predikat ${predikat}.`);
+            renderContent();
+        }
+
+        function hapusNilai(id) {
+            nilaiData = nilaiData.filter(n => n.id !== id);
+            renderContent();
+        }
+
+        function tambahTransaksi(e) {
+            e.preventDefault();
+            const ket = document.getElementById('trx-ket').value;
+            const jenis = document.getElementById('trx-jenis').value;
+            const jumlah = parseFloat(document.getElementById('trx-jumlah').value);
+
+            if (jenis === 'masuk') {
+                keuanganData.saldo += jumlah;
+            } else {
+                if (jumlah > keuanganData.saldo) {
+                    showModal("Saldo Tidak Cukup", "Jumlah pengeluaran melebihi sisa saldo kas siswa!", "fa-solid fa-triangle-exclamation", "bg-rose-100 text-rose-600");
+                    return;
+                }
+                keuanganData.saldo -= jumlah;
+            }
+
+            keuanganData.riwayat.unshift({
+                id: Date.now(),
+                ket, jenis, jumlah,
+                tanggal: "Baru saja"
+            });
+
+            showModal("Transaksi Berhasil", `Berhasil mencatat transaksi ${ket} sebesar Rp ${jumlah.toLocaleString('id-ID')}.`);
+            renderContent();
+        }
+
+        function pinjamBuku(e) {
+            e.preventDefault();
+            const peminjam = document.getElementById('perpus-nama').value;
+            const judul = document.getElementById('perpus-buku').value;
+
+            const bukuObj = perpusData.buku.find(b => b.judul === judul);
+            if (bukuObj && bukuObj.stok > 0) {
+                bukuObj.stok -= 1;
+                perpusData.peminjaman.push({
+                    id: Date.now(),
+                    peminjam, judul,
+                    tanggal: "Hari ini",
+                    status: "Dipinjam"
+                });
+                showModal("Peminjaman Berhasil", `Buku "${judul}" berhasil dipinjam oleh ${peminjam}.`);
+                renderContent();
+            } else {
+                showModal("Stok Habis", "Maaf, stok buku tersebut sedang kosong.", "fa-solid fa-circle-xmark", "bg-rose-100 text-rose-600");
+            }
+        }
+
+        function kembalikanBuku(idx) {
+            const p = perpusData.peminjaman[idx];
+            const bukuObj = perpusData.buku.find(b => b.judul === p.judul);
+            if (bukuObj) bukuObj.stok += 1;
+            perpusData.peminjaman.splice(idx, 1);
+            showModal("Buku Dikembalikan", "Buku telah berhasil dikembalikan ke perpustakaan.");
+            renderContent();
+        }
+
+        function tambahKeKeranjang(id) {
+            const menuObj = makananData.menu.find(m => m.id === id);
+            const existing = makananData.keranjang.find(k => k.id === id);
+            if (existing) {
+                existing.jumlah += 1;
+            } else {
+                makananData.keranjang.push({ ...menuObj, jumlah: 1 });
+            }
+            renderContent();
+        }
+
+        function hapusKeranjang(index) {
+            makananData.keranjang.splice(index, 1);
+            renderContent();
+        }
+
+        function cetakStruk() {
+            const total = makananData.keranjang.reduce((sum, item) => sum + (item.harga * item.jumlah), 0);
+            showModal("Struk Kantin SMAN 44", `=== STRUK PEMBAYARAN KANTIN ===\nPemesan: ${currentUser.nama} (${currentUser.kelas})\nTotal: Rp ${total.toLocaleString('id-ID')}\nStatus: Lunas / Siap Diambil.`);
+            makananData.keranjang = [];
+            renderContent();
+        }
+
+        window.onload = function() {
+            renderContent();
+        };
+    </script>
+</body>
+</html>
